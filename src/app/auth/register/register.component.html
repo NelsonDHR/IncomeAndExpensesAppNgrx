@@ -2,32 +2,44 @@
     <div class="content-wrapper d-flex align-items-center auth register-bg-1 theme-one">
         <div class="row w-100">
             <div class="col-lg-4 mx-auto">
-                <h2 class="text-center mb-4">Registro</h2>
+                <h2 class="text-center mb-4">Register</h2>
                 <div class="auto-form-wrapper">
-                    <form action="#">
+                    <form [formGroup]="registerform" (ngSubmit)="createUser()">
+
                         <div class="form-group">
                             <div class="input-group">
-                                <input type="email" class="form-control" placeholder="Correo">
+                                <input type="text" class="form-control" placeholder="Name" formControlName="name">
                                 <div class="input-group-append">
                                     <span class="input-group-text">
-                      <i class="fa fa-check-circle"></i>
-                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <input type="password" class="form-control" placeholder="Password">
-                                <div class="input-group-append">
-                                    <span class="input-group-text">
-                      <i class="fa fa-check-circle"></i>
+                       <i  *ngIf="registerform.controls['name'].valid" class="fa fa-check-circle"></i>
                     </span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <button class="btn btn-primary submit-btn btn-block">Crear cuenta</button>
+                            <div class="input-group">
+                                <input type="email" class="form-control" placeholder="e-mail" formControlName="email">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                      <i  *ngIf="registerform.controls['email'].valid" class="fa fa-check-circle"></i>
+                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="password" class="form-control" placeholder="Password: min. 8 characters" formControlName="password">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                       <i  *ngIf="registerform.controls['password'].valid" class="fa fa-check-circle"></i>
+                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-primary submit-btn btn-block" [disabled]="registerform.invalid">Crear cuenta</button>
                         </div>
                         <div class="text-block text-center my-3">
                             <span class="text-small font-weight-semibold">ya tienes una cuenta?</span>
