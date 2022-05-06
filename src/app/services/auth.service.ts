@@ -2,20 +2,38 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { map, tap } from 'rxjs';
+import { map, Subscription, tap } from 'rxjs';
+import { AppState } from '../app.reducer';
 import { User } from '../models/user.model';
+import * as authactions from '../auth/auth.actions'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(public auth:AngularFireAuth, private firestore: AngularFirestore) { }
+  userSubscription: Subscription;
+  
+  constructor(public auth:AngularFireAuth, private firestore: AngularFirestore,private store:Store<AppState>) { }
 
   initAuthListener() {
     this.auth.authState.subscribe(fuser => {
-      console.log(fuser);
+      if(fuser){
+        //debo de desuscribirme a los cambios del usuario pues si estos cambias me dipara el servicio
+        this.userSubscription=this.firestore.doc(`${fuser.uid}/user`).valueChanges().subscribe(firestoreUser => {
+          console.log(firestoreUser);
+          //Referencio la clase User y uso el metodo estatico fromfirebase que espera un objeto firestoreuser y lo desestructura para crear un usuario de mi clase User
+          const user= User.fromfirebase(firestoreUser);
+          this.store.dispatch(authactions.setUser({user: user}));
+        });
+      
+        //this.store.dispatch(authactions.setUser({}));
+      }else{
+          this.userSubscription.unsubscribe();
+          this.store.dispatch(authactions.unsetUser());
+      }
     })
   }
 
@@ -37,6 +55,7 @@ export class AuthService {
   }
 
   logOut(){
+    //this.store.dispatch(authactions.unsetUser());
     return this.auth.signOut();
   }
   
