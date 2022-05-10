@@ -28,6 +28,8 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { SidebarComponent } from './shared/sidebar/sidebar.component';
 import { environment } from 'src/environments/environment.prod';
 import { appReducers } from './app.reducer';
+import { OrderIncomePipe } from './pipes/order-income.pipe';
+import { NgChartsModule } from 'ng2-charts';
 
 
 
@@ -44,6 +46,7 @@ import { appReducers } from './app.reducer';
     FooterComponent,
     NavbarComponent,
     SidebarComponent,
+    OrderIncomePipe,
   ],
   imports: [
     BrowserModule,
@@ -56,6 +59,7 @@ import { appReducers } from './app.reducer';
       logOnly: environment.production, // Restrict extension to log-only mode
       //autoPause: true, // Pauses recording actions and state changes when the extension window is not open
     }),
+    NgChartsModule,
     
     AngularFirestoreModule,
     AngularFireAuthModule

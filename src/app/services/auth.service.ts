@@ -8,6 +8,7 @@ import { map, Subscription, tap } from 'rxjs';
 import { AppState } from '../app.reducer';
 import { User } from '../models/user.model';
 import * as authactions from '../auth/auth.actions'
+import * as IEactions from '../income-expenses/income-expense.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,12 @@ import * as authactions from '../auth/auth.actions'
 export class AuthService {
 
   userSubscription: Subscription;
+
+  private _user:any;
+
+  get user(){
+    return{... this._user};
+  }
   
   constructor(public auth:AngularFireAuth, private firestore: AngularFirestore,private store:Store<AppState>) { }
 
@@ -23,16 +30,19 @@ export class AuthService {
       if(fuser){
         //debo de desuscribirme a los cambios del usuario pues si estos cambias me dipara el servicio
         this.userSubscription=this.firestore.doc(`${fuser.uid}/user`).valueChanges().subscribe(firestoreUser => {
-          console.log(firestoreUser);
           //Referencio la clase User y uso el metodo estatico fromfirebase que espera un objeto firestoreuser y lo desestructura para crear un usuario de mi clase User
           const user= User.fromfirebase(firestoreUser);
+          this._user=user;
           this.store.dispatch(authactions.setUser({user: user}));
+
         });
       
         //this.store.dispatch(authactions.setUser({}));
       }else{
+          this._user=null;
           this.userSubscription.unsubscribe();
           this.store.dispatch(authactions.unsetUser());
+          this.store.dispatch(IEactions.unsetItems());
       }
     })
   }
