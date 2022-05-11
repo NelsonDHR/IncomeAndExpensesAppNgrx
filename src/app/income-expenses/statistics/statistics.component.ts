@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.reducer';
 
 import { ChartData, ChartEvent, ChartType } from 'chart.js';
+import { AppStateWithIE } from '../income-expense.reducer';
 
 @Component({
   selector: 'app-statistics',
@@ -27,7 +28,7 @@ export class StatisticsComponent implements OnInit {
 
   public doughnutChartType: ChartType = 'doughnut';
 
-  constructor(private store:Store<AppState>) { 
+  constructor(private store:Store<AppStateWithIE>) { 
 
   }
 

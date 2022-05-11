@@ -2,10 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { Subscription } from 'rxjs';
-import { AppState } from 'src/app/app.reducer';
+
 import { IncomeExpenseService } from 'src/app/services/income-expense.service';
 import Swal from 'sweetalert2';
 import { IncomeExpense } from '../../models/income-expense.model';
+import { AppStateWithIE } from '../income-expense.reducer';
 
 @Component({
   selector: 'app-detail',
@@ -17,7 +18,7 @@ export class DetailComponent implements OnInit,OnDestroy {
   incomeExpense: any[] = [];
   IncomeExpenseSubscription: Subscription;
   
-  constructor(private store:Store<AppState>,private incomeExpenseService:IncomeExpenseService) { }
+  constructor(private store:Store<AppStateWithIE>,private incomeExpenseService:IncomeExpenseService) { }
 
   ngOnInit(): void {
     this.IncomeExpenseSubscription=this.store.select('incomeExpense').subscribe(({items})=> {
